@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Global styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom component styles */
+.jargon-term {
+  @apply border-b border-dotted border-accent-positive cursor-help text-accent-positive font-medium;
+}
+
+.jargon-term-on-green {
+  @apply border-b border-dotted border-white cursor-help text-white font-bold;
+}
+
+.tooltip {
+  @apply absolute z-[55] bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-xs;
+  transform: translateX(-50%) translateY(-100%);
+  margin-top: -8px;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: white;
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Chart placeholder animation */
+.chart-placeholder {
+  background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Progress bar animation */
+.progress-bar {
+  transition: width 0.3s ease-in-out;
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-primary text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply bg-accent-positive text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg;
+}
+
+.btn-warning {
+  @apply bg-accent-warning text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-100;
+}
+
+.card-hover {
+  @apply transition-shadow duration-200 hover:shadow-md;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+/* Chat bubble styles - TradeMate Mentor提示框应该有最高层级 */
+.chat-bubble {
+  @apply fixed bottom-6 right-6 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm z-[60];
+}
+
+.chat-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: white;
+}
+
+/* Risk indicator colors */
+.risk-low {
+  @apply text-green-600 bg-green-50;
+}
+
+.risk-medium {
+  @apply text-yellow-600 bg-yellow-50;
+}
+
+.risk-high {
+  @apply text-red-600 bg-red-50;
+}
+
+/* Pulse animation for attention */
+.pulse-glow {
+  box-shadow: 0 0 0 0 rgba(0, 210, 160, 0.7);
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 210, 160, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 210, 160, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 210, 160, 0);
+  }
+}
