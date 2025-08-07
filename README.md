@@ -65,7 +65,7 @@ src/
 
 ## � Live Demo
 
-🌐 **[访问在线演示](https://YOUR_GITHUB_USERNAME.github.io/trademate-prototype/)**
+🌐 **[访问在线演示](https://Cui-Owen.github.io/trademate-prototype/)**
 
 体验完整的TradeMate CFD交易平台原型，包括：
 - 交互式新手引导流程

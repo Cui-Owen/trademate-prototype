@@ -2,7 +2,7 @@
   "name": "trademate-prototype",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://YOUR_GITHUB_USERNAME.github.io/trademate-prototype",
+  "homepage": "https://Cui-Owen.github.io/trademate-prototype",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
