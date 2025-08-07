@@ -63,7 +63,17 @@ src/
 7. **Compliance Alert**: Proactive risk management
 8. **Post-Trade Debrief**: Learning reinforcement and analysis
 
-## 🛠️ Installation & Setup
+## � Live Demo
+
+🌐 **[访问在线演示](https://YOUR_GITHUB_USERNAME.github.io/trademate-prototype/)**
+
+体验完整的TradeMate CFD交易平台原型，包括：
+- 交互式新手引导流程
+- 风险模拟器和实时计算
+- 教育性工具提示
+- 合规警告系统
+
+## �🛠️ Installation & Setup
 
 ### Prerequisites
 - Node.js 16.0 or higher
@@ -87,6 +97,34 @@ The application will open at `http://localhost:3000`
 ```bash
 npm run build
 ```
+
+### Deploy to GitHub Pages
+```bash
+# 自动部署（推荐）
+git push origin main
+
+# 手动部署
+npm run deploy
+```
+
+## 📦 GitHub Pages 部署
+
+本项目已配置自动部署到GitHub Pages：
+
+1. **自动部署**: 每次推送到`main`分支时自动触发
+2. **GitHub Actions**: 使用`.github/workflows/deploy.yml`工作流
+3. **访问地址**: `https://YOUR_GITHUB_USERNAME.github.io/trademate-prototype/`
+
+### 部署步骤
+1. 在GitHub上创建新仓库 `trademate-prototype`
+2. 更新`package.json`中的`homepage`字段为您的GitHub Pages URL
+3. 推送代码到GitHub:
+   ```bash
+   git remote add origin https://github.com/YOUR_GITHUB_USERNAME/trademate-prototype.git
+   git push -u origin main
+   ```
+4. 在GitHub仓库设置中启用GitHub Pages (Source: gh-pages branch)
+5. 几分钟后即可访问在线演示
 
 ## 🎯 Key Interactive Features
 
