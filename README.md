@@ -1,87 +1,61 @@
 # TradeMate - CFD Trading Platform Prototype
 
-A comprehensive, interactive CFD trading platform prototype built with React, featuring the innovative "Guided Activation Model™" that transforms novice traders from apprehension to confidence through seamless, educational experiences.
+[![Deploy to GitHub Pages](https://github.com/Cui-Owen/trademate-prototype/actions/workflows/deploy.yml/badge.svg)](https://github.com/Cui-Owen/trademate-prototype/actions/workflows/deploy.yml)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://Cui-Owen.github.io/trademate-prototype/)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.1.6-blue)](https://tailwindcss.com/)
 
-## 🚀 Features
+> A comprehensive, interactive CFD trading platform prototype featuring the innovative **Guided Activation Model™** that transforms novice traders from apprehension to confidence through seamless, educational experiences.
 
-### Core Functionality
-- **Guided Onboarding**: Interactive 5-step journey from exploration to execution
-- **Risk-Free Practice Trading**: Complete trading simulation with virtual money
-- **Educational Tooltips**: Contextual explanations of financial terms
-- **Real-Time Risk Assessment**: Dynamic leverage and position sizing guidance
-- **Compliance Integration**: Proactive alerts for high-risk configurations
-- **Intelligent Guidance**: Hesitation detection with mentor-like assistance
+## 🌐 Live Demo
 
-### Technical Highlights
-- **React 18** with modern hooks and context API
-- **Tailwind CSS** for responsive, professional design
-- **React Router** for seamless navigation
-- **Context-based State Management** for trading and user data
-- **Interactive Components** with real-time calculations
-- **Accessibility-First Design** with proper ARIA labels
+**[View Live Demo →](https://Cui-Owen.github.io/trademate-prototype/)**
 
-## 🏗️ Architecture
+Experience the complete TradeMate prototype with interactive onboarding, risk simulation, and educational guidance systems.
 
-### Component Structure
-```
-src/
-├── components/           # Reusable UI components
-│   ├── Logo.js          # TradeMate branding
-│   ├── Modal.js         # Universal modal system
-│   ├── Tooltip.js       # Financial term explanations
-│   └── OnboardingChecklist.js
-├── pages/               # Main application pages
-│   ├── Welcome.js       # Sign-up & authentication
-│   ├── TradingCockpit.js # Main dashboard
-│   ├── AssetDiscovery.js # Educational asset exploration
-│   ├── OrderTicket.js   # Trade configuration
-│   ├── PreTradeConfirmation.js # Risk review
-│   ├── GuidanceNudge.js # Hesitation assistance
-│   ├── ComplianceAlert.js # Risk warnings
-│   └── PostTradeDebrief.js # Learning outcomes
-├── context/             # State management
-│   ├── TradingContext.js # Trading data & actions
-│   └── UserContext.js   # User preferences & UI state
-└── App.js              # Main application router
-```
+## ✨ Key Features
 
-### Design System
-- **Primary Color**: #0A2540 (Deep corporate blue)
-- **Secondary**: #F6F9FC (Light gray backgrounds)
-- **Accent Positive**: #00D2A0 (Encouraging teal)
-- **Accent Warning**: #FFC107 (Risk alerts)
-- **Typography**: Inter font family for clarity
+### 🎓 Educational Trading Experience
+- **5-Step Guided Onboarding** - Progressive skill building from exploration to execution
+- **Risk-Free Environment** - Complete trading simulation with virtual money
+- **Contextual Learning** - Jargon-busting tooltips and real-time explanations
+- **Hesitation Detection** - Smart UX that provides mentor-like assistance
 
-## 📱 User Journey Flow
+### 📊 Advanced Risk Management
+- **Real-Time Risk Calculator** - Dynamic leverage and position sizing guidance
+- **Compliance Integration** - Proactive alerts for high-risk configurations
+- **P&L Simulation** - Interactive outcome modeling with visual feedback
+- **Educational Risk Warnings** - Plain-English explanations of trading risks
 
-1. **Welcome Screen**: Instant engagement with guided sign-up
-2. **Trading Cockpit**: Dashboard with progress tracking
-3. **Asset Discovery**: Educational exploration with jargon buster
-4. **Order Ticket**: Interactive trade configuration with risk simulator
-5. **Pre-Trade Confirmation**: Plain-English trade review
-6. **Guidance Nudge**: Smart assistance for hesitant users
-7. **Compliance Alert**: Proactive risk management
-8. **Post-Trade Debrief**: Learning reinforcement and analysis
+### 🎨 Professional UX/UI
+- **Trust-Building Design** - Professional, uncluttered interface with consistent branding
+- **Responsive Architecture** - Optimized for desktop, tablet, and mobile devices
+- **Accessibility First** - WCAG 2.1 AA compliance with proper ARIA labels
+- **Progressive Disclosure** - Complexity introduced gradually as users advance
 
-## � Live Demo
+## 🛠️ Technology Stack
 
-🌐 **[访问在线演示](https://Cui-Owen.github.io/trademate-prototype/)**
+- **Frontend**: React 18 with modern hooks and Context API
+- **Styling**: Tailwind CSS for responsive, utility-first design
+- **Routing**: React Router for seamless SPA navigation
+- **State Management**: Context-based architecture for scalable data flow
+- **Deployment**: GitHub Pages with automated CI/CD
+- **Development**: Hot reload, ESLint, and modern development tooling
 
-体验完整的TradeMate CFD交易平台原型，包括：
-- 交互式新手引导流程
-- 风险模拟器和实时计算
-- 教育性工具提示
-- 合规警告系统
-
-## �🛠️ Installation & Setup
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 16.0 or higher
-- npm or yarn package manager
-
-### Quick Start
 ```bash
-# Clone and navigate to project
+node >= 16.0.0
+npm >= 8.0.0
+```
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/Cui-Owen/trademate-prototype.git
+
+# Navigate to project directory
 cd trademate-prototype
 
 # Install dependencies
@@ -91,198 +65,153 @@ npm install
 npm start
 ```
 
-The application will open at `http://localhost:3000`
+The application will be available at `http://localhost:3000`
 
-### Build for Production
+### Build & Deploy
 ```bash
+# Build for production
 npm run build
-```
 
-### Deploy to GitHub Pages
-```bash
-# 自动部署（推荐）
-git push origin main
-
-# 手动部署
+# Deploy to GitHub Pages
 npm run deploy
 ```
 
-## 📦 GitHub Pages 部署
+## 📁 Project Structure
 
-本项目已配置自动部署到GitHub Pages：
+```
+src/
+├── components/           # Reusable UI components
+│   ├── Logo.js          # Brand identity and navigation
+│   ├── Modal.js         # Universal modal system
+│   ├── Tooltip.js       # Financial term explanations
+│   └── OnboardingChecklist.js # Progress tracking
+├── pages/               # Main application pages
+│   ├── Welcome.js       # Authentication and sign-up
+│   ├── TradingCockpit.js # Main dashboard and navigation
+│   ├── AssetDiscovery.js # Educational asset exploration
+│   ├── OrderTicket.js   # Trade configuration interface
+│   ├── PreTradeConfirmation.js # Risk review and validation
+│   ├── GuidanceNudge.js # Hesitation assistance system
+│   ├── ComplianceAlert.js # Risk warnings and education
+│   └── PostTradeDebrief.js # Learning outcomes and analysis
+├── context/             # State management
+│   ├── TradingContext.js # Trading data and actions
+│   └── UserContext.js   # User preferences and UI state
+└── App.js              # Main application router and providers
+```
 
-1. **自动部署**: 每次推送到`main`分支时自动触发
-2. **GitHub Actions**: 使用`.github/workflows/deploy.yml`工作流
-3. **访问地址**: `https://YOUR_GITHUB_USERNAME.github.io/trademate-prototype/`
+## 🎯 Core Interactive Features
 
-### 部署步骤
-1. 在GitHub上创建新仓库 `trademate-prototype`
-2. 更新`package.json`中的`homepage`字段为您的GitHub Pages URL
-3. 推送代码到GitHub:
-   ```bash
-   git remote add origin https://github.com/YOUR_GITHUB_USERNAME/trademate-prototype.git
-   git push -u origin main
-   ```
-4. 在GitHub仓库设置中启用GitHub Pages (Source: gh-pages branch)
-5. 几分钟后即可访问在线演示
+### Risk/Reward Simulator
+- Real-time P&L calculations based on leverage (1x-30x)
+- Interactive sliders with instant visual feedback
+- Scenario modeling for different market movements
+- Educational explanations of risk metrics
 
-## 🎯 Key Interactive Features
+### Intelligent Guidance System
+- **Hesitation Detection**: 5-second hover detection on critical actions
+- **Contextual Assistance**: Non-intrusive mentor-like guidance
+- **Educational Tooltips**: Clear, beginner-friendly financial term definitions
+- **Progress Gamification**: 5-step onboarding with visual achievement tracking
 
-### 1. Risk/Reward Simulator
-Real-time calculation of potential outcomes based on:
-- Leverage selection (1x-30x)
-- Position size
-- Price movement scenarios
-- Interactive sliders with instant feedback
+### Compliance-as-a-Feature
+- Proactive high-leverage warnings (>20x)
+- Educational risk explanations with alternatives
+- Clear compliance pathways and recommendations
+- Regulatory-friendly design patterns
 
-### 2. Jargon Buster Tooltips
-Hover over any financial term to see:
-- Clear, beginner-friendly definitions
-- Visual examples
-- Links to detailed explanations
-- Context-aware positioning
-
-### 3. Hesitation Detection
-Smart UX that detects user uncertainty:
-- 5-second hover timer on critical actions
-- Contextual guidance messages
-- Reassuring educational content
-- Non-intrusive mentor assistance
-
-### 4. Compliance-as-a-Feature
-Proactive risk management:
-- High leverage warnings (>20x)
-- Educational risk explanations
-- Alternative recommendations
-- Clear compliance options
-
-### 5. Progress Gamification
-Visual progress tracking:
-- 5-step onboarding checklist
-- Completion animations
-- Achievement badges
-- Encouraging feedback
-
-## 🎨 Design Philosophy
-
-### Trust-Building Elements
-- Professional, uncluttered interface
-- Consistent color psychology
-- Clear visual hierarchy
-- Accessibility compliance
-- Progressive disclosure of complexity
-
-### Educational Integration
-- Just-in-time learning
-- Contextual explanations
-- Interactive demonstrations
-- Risk-free practice environment
-- Positive reinforcement loops
-
-## 🧪 Testing
+## 🧪 Testing & Demo
 
 ### Demo Credentials
-- **Email**: Any valid email format
-- **Password**: Minimum 6 characters
-- **Environment**: All trades use virtual money
+- **Email**: Any valid email format (e.g., `demo@example.com`)
+- **Password**: Minimum 6 characters (e.g., `demo123`)
+- **Environment**: All trades use virtual money with no real financial risk
 
 ### Test Scenarios
-1. **Complete Onboarding**: Follow the 5-step guided journey
-2. **High Leverage Alert**: Set leverage >20x to trigger compliance
+1. **Complete User Journey**: Follow the 5-step guided onboarding process
+2. **Risk Management**: Set leverage >20x to trigger compliance alerts
 3. **Hesitation Detection**: Hover over "Execute Trade" for 5+ seconds
-4. **Trade Outcomes**: Experience both profitable and losing trades
-5. **Responsive Design**: Test on mobile, tablet, and desktop
+4. **Responsive Design**: Test across mobile, tablet, and desktop viewports
+5. **Accessibility**: Navigate using keyboard-only and screen reader testing
 
-## 📊 Performance Features
+## 🎨 Design System
 
-### Real-Time Calculations
-- Dynamic P&L estimation
-- Margin requirement calculation
-- Risk level assessment
-- Position sizing validation
+| Element | Specification | Usage |
+|---------|---------------|-------|
+| **Primary** | `#0A2540` | Corporate blue for trust and professionalism |
+| **Secondary** | `#F6F9FC` | Light backgrounds and subtle separations |
+| **Success** | `#00D2A0` | Positive actions and encouraging feedback |
+| **Warning** | `#FFC107` | Risk alerts and important notifications |
+| **Typography** | Inter | Clean, readable font family for clarity |
 
-### Educational Analytics
-- Progress tracking
-- Learning milestone completion
-- Time-to-confidence metrics
-- User engagement insights
+## 📊 Performance & Security
 
-## 🔒 Security & Compliance
+### Performance Features
+- **Optimized Bundle**: Tree-shaking and code splitting
+- **CDN Delivery**: GitHub Pages global content delivery
+- **Responsive Images**: Optimized assets for different screen densities
+- **Lazy Loading**: Components loaded on-demand for faster initial load
 
-### Practice Mode Safety
-- Virtual money only
-- No real financial risk
-- Educational disclaimers
-- Clear practice indicators
+### Security Considerations
+- **Virtual Environment**: No real financial data or transactions
+- **Privacy-First**: Local storage only, no external data transmission
+- **Educational Disclaimers**: Clear indication of practice mode
+- **GDPR-Ready**: Privacy-focused architecture and data handling
 
-### Data Protection
-- Local storage for session data
-- No sensitive information transmitted
-- Privacy-focused design
-- GDPR-ready architecture
+## 🔄 Development Workflow
 
-## 🚀 Deployment
-
-### Development
+### Available Scripts
 ```bash
-npm start
+npm start          # Development server with hot reload
+npm run build      # Production build with optimizations
+npm run test       # Run test suites
+npm run deploy     # Deploy to GitHub Pages
+npm run lint       # Code quality checks
 ```
 
-### Production Build
-```bash
-npm run build
-npm install -g serve
-serve -s build
-```
+### Deployment Pipeline
+- **Automated CI/CD**: GitHub Actions workflow for seamless deployment
+- **Branch Protection**: Main branch protected with automated checks
+- **Preview Deployments**: Pull request previews for review
+- **Rollback Support**: Easy revert to previous stable versions
 
-### Environment Variables
-```env
-REACT_APP_VERSION=1.0.0
-REACT_APP_ENVIRONMENT=development
-```
+## 📈 Future Roadmap
 
-## 📈 Future Enhancements
+### Phase 1: Enhanced Features
+- [ ] Advanced charting integration with TradingView
+- [ ] Social trading features and community elements
+- [ ] Portfolio management and tracking systems
+- [ ] Mobile app development (React Native)
 
-### Phase 1 Extensions
-- Advanced charting integration
-- Social trading features
-- Portfolio management
-- Mobile app development
-
-### Phase 2 Features
-- AI-powered trading insights
-- Advanced risk management tools
-- Multi-asset support
-- Real-time market data
+### Phase 2: Production Features
+- [ ] Real market data integration
+- [ ] AI-powered trading insights and recommendations
+- [ ] Advanced risk management tools
+- [ ] Multi-asset support (Forex, Commodities, Indices)
 
 ## 🤝 Contributing
 
-This is a prototype demonstration. For production implementation:
-1. Implement proper authentication
-2. Add real market data feeds
-3. Integrate with trading APIs
-4. Enhance security measures
-5. Add comprehensive testing
+This project serves as a prototype demonstration. For production implementation:
+
+1. **Authentication**: Implement secure user authentication and authorization
+2. **Market Data**: Integrate real-time market data feeds
+3. **Trading APIs**: Connect with legitimate trading platforms
+4. **Security**: Enhance security measures and compliance features
+5. **Testing**: Add comprehensive unit, integration, and e2e testing
 
 ## 📄 License
 
-MIT License - See LICENSE file for details
+MIT License - See [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- **Design Inspiration**: Modern fintech platforms
-- **Educational Approach**: Behavioral psychology principles
-- **Technical Stack**: React community best practices
-- **Accessibility**: WCAG 2.1 AA compliance guidelines
+- **Design Inspiration**: Leading fintech platforms and UX research
+- **Educational Approach**: Behavioral psychology and adult learning principles
+- **Technical Standards**: React community best practices and accessibility guidelines
+- **Regulatory Compliance**: Financial industry standards and user protection guidelines
 
 ---
 
-## 📞 Support
+**Built with ❤️ for financial education and user empowerment**
 
-For questions about this prototype:
-- Review the component documentation
-- Check the console for development logs
-- Test the interactive features step-by-step
-- Explore the guided user journey
-
-**Built with ❤️ for TradeMate - Transforming Trading Education**
+> 💡 **Note**: This is an educational prototype using virtual money. No real financial transactions or risks are involved.
