@@ -1,40 +1,96 @@
 import type { MarketDataProvider, Quote } from './MarketDataProvider';
+import { getReplayController } from './replay/controller';
 
-// Minimal in-memory replay provider for demos; accepts ?provider=replay
+type Candle = { t: number; o: number; h: number; l: number; c: number };
+
+// Dataset-backed replay provider; accepts ?provider=replay&dataset=volatile|gap|range
 export class ReplayProvider implements MarketDataProvider {
   private idx = 0;
-  private series: number[];
+  private candles: Candle[] = [];
+  private latest: Quote | null = null;
 
   constructor() {
-    // deterministic sequence
-    this.series = Array.from({ length: 300 }, (_, i) => 150 + Math.sin(i / 10) * 5 + i * 0.01);
+    const dataset = new URLSearchParams(window.location.search).get('dataset') || 'volatile';
+    fetch(`${process.env.PUBLIC_URL || ''}/datasets/${dataset}.ndjson`)
+      .then((r) => r.text())
+      .then((text) => {
+        this.candles = text
+          .split('\n')
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => JSON.parse(l));
+        this.startLoop();
+      })
+      .catch(() => {
+        // fallback to synthetic if dataset missing
+        this.candles = Array.from({ length: 240 }, (_, i) => {
+          const base = 150 + Math.sin(i / 10) * 5;
+          return {
+            t: Date.now() + i * 60_000,
+            o: base,
+            h: base + 0.4,
+            l: base - 0.4,
+            c: base + 0.1,
+          };
+        });
+        this.startLoop();
+      });
+  }
+
+  private startLoop() {
+    const ctrl = getReplayController();
+    const tick = () => {
+      const { playing, speed } = ctrl.get();
+      if (playing && this.candles.length) {
+        this.idx = (this.idx + speed) % this.candles.length;
+        const k = this.candles[this.idx];
+        this.latest = {
+          symbol: 'AAPL',
+          price: round2(k.c),
+          change: round2(k.c - this.candles[Math.max(0, this.idx - 1)].c),
+          changePercent: round2(((k.c - this.candles[Math.max(0, this.idx - 1)].c) / k.c) * 100),
+          spread: 0.01,
+          volume: 'replay',
+        };
+      }
+    };
+    window.setInterval(tick, 1000);
+    ctrl.subscribe((s) => {
+      if (!s.playing) return;
+      // index changed externally
+      this.idx = s.index % (this.candles.length || 1);
+    });
   }
 
   async getQuote(symbol: string): Promise<Quote> {
-    const price = this.series[this.idx % this.series.length];
-    const prev = this.series[(this.idx - 1 + this.series.length) % this.series.length];
-    this.idx++;
-    const change = Number((price - prev).toFixed(2));
-    const changePercent = Number(((change / prev) * 100).toFixed(2));
-    return { symbol, price: round2(price), change, changePercent, spread: 0.01, volume: 'replay' };
+    if (!this.latest && this.candles.length) {
+      const k = this.candles[this.idx];
+      this.latest = {
+        symbol,
+        price: round2(k.c),
+        change: 0,
+        changePercent: 0,
+        spread: 0.01,
+        volume: 'replay',
+      };
+    }
+    return (
+      this.latest || {
+        symbol,
+        price: 150,
+        change: 0,
+        changePercent: 0,
+        spread: 0.01,
+        volume: 'replay',
+      }
+    );
   }
 
   async getKlines(_symbol: string, _interval: string) {
-    const now = Date.now();
-    return Array.from({ length: 60 }, (_, i) => {
-      const base = this.series[(this.idx + i) % this.series.length];
-      const o = base + 0.1;
-      const h = base + 0.3;
-      const l = base - 0.3;
-      const c = base + 0.05;
-      return {
-        t: now - (60 - i) * 60 * 1000,
-        o: round2(o),
-        h: round2(h),
-        l: round2(l),
-        c: round2(c),
-      };
-    });
+    const from = Math.max(0, this.idx - 60);
+    return this.candles
+      .slice(from, this.idx + 1)
+      .map((c) => ({ ...c, o: round2(c.o), h: round2(c.h), l: round2(c.l), c: round2(c.c) }));
   }
 }
 

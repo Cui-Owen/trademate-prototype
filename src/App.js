@@ -18,6 +18,8 @@ import { I18nProvider } from './i18n';
 import { ThemeProvider } from './design/theme';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { createQueryClient } from './services/query/client';
+import { ReplayControls } from './components/replay/ReplayControls';
+import { ReviewerDemo } from './demo/ReviewerDemo';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,6 +45,7 @@ function App() {
             <I18nProvider>
               <QueryClientProvider client={createQueryClient()}>
                 <Router>
+                  <ReviewerDemo />
                   <Routes>
                     {/* Public route - Welcome/Sign-up */}
                     <Route
@@ -123,6 +126,9 @@ function App() {
                     />
                   </Routes>
                 </Router>
+                {new URLSearchParams(window.location.search).get('provider') === 'replay' && (
+                  <ReplayControls />
+                )}
               </QueryClientProvider>
             </I18nProvider>
           </ThemeProvider>
