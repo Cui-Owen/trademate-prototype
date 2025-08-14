@@ -17,13 +17,14 @@ export const LightweightAdapter: ChartAdapter = {
     let line: LineSeries | null = null;
     try {
       const lib = await import('lightweight-charts');
-      chart = lib.createChart(container, {
+      const created = lib.createChart(container, {
         height: opts.height,
         layout: { background: { color: 'transparent' }, textColor: '#6B7280' },
         grid: { horzLines: { color: '#e5e7eb' }, vertLines: { color: '#f3f4f6' } },
       });
-      series = chart.addCandlestickSeries();
-      line = chart.addLineSeries({ color: '#60A5FA', lineWidth: 1 });
+      chart = created;
+      series = created.addCandlestickSeries();
+      line = created.addLineSeries({ color: '#60A5FA', lineWidth: 1 });
     } catch {
       // library missing
       const note = document.createElement('div');

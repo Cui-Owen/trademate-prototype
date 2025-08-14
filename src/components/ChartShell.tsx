@@ -40,7 +40,7 @@ export const ChartShell: React.FC<Props> = ({
           layout: { background: { color: 'transparent' }, textColor: '#6B7280' },
           grid: { horzLines: { color: '#e5e7eb' }, vertLines: { color: '#f3f4f6' } },
         });
-        seriesRef.current = chartRef.current.addCandlestickSeries();
+        seriesRef.current = chartRef.current!.addCandlestickSeries();
       } catch (e) {
         // library not installed; noop fallback
       }
