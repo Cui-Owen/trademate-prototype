@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["DOM", "ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@types/*": ["src/types/*"],
+      "@schema/*": ["src/schema/*"],
+      "@state/*": ["src/state/*"],
+      "@services/*": ["src/services/*"],
+      "@providers/*": ["src/providers/*"],
+      "@compliance/*": ["src/compliance/*"]
+    }
+  },
+  "include": [
+    "src",
+    "src/types",
+    "src/schema",
+    "src/state",
+    "src/services",
+    "src/providers",
+    "src/compliance"
+  ],
+  "exclude": ["node_modules", "build", "dist"]
+}
