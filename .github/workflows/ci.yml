@@ -35,5 +35,3 @@ jobs:
         uses: dequelabs/axe-linter-action@v2
         with:
           enable_autofix: false
-        continue-on-error: true
-

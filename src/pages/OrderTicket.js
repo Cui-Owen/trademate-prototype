@@ -4,25 +4,33 @@ import Logo from '../components/Logo';
 import { FinancialTerms } from '../components/Tooltip';
 import ComplianceAlert from './ComplianceAlert';
 import { useTrading } from '../context/TradingContext';
+import { TradeChart } from '../components/trade/TradeChart';
+import { RiskPanel } from '../components/trade/RiskPanel';
+import { I18nProvider, useI18n } from '../i18n';
 import { useUser } from '../context/UserContext';
 
 const OrderTicket = () => {
   const navigate = useNavigate();
-  const { 
-    selectedAsset, 
-    leverage, 
-    setLeverage, 
-    tradeDirection, 
-    setTradeDirection, 
-    tradeAmount, 
+  const {
+    selectedAsset,
+    leverage,
+    setLeverage,
+    tradeDirection,
+    setTradeDirection,
+    tradeAmount,
     setTradeAmount,
+    stopLoss,
+    takeProfit,
+    setStopLoss,
+    setTakeProfit,
     calculatePotentialPnL,
     calculateMarginRequirement,
     calculateRiskLevel,
     updateOnboardingProgress,
     userRiskDecisions,
-    setUserRiskDecision
+    setUserRiskDecision,
   } = useTrading();
+  const { t } = useI18n();
   const { setCurrentPage, pushModal } = useUser();
 
   useEffect(() => {
@@ -33,26 +41,26 @@ const OrderTicket = () => {
   const [showSimulator, setShowSimulator] = useState(false);
   const [simulatorValues, setSimulatorValues] = useState({
     priceChange: 1, // percentage
-    timeframe: '1 day'
+    timeframe: '1 day',
   });
 
   const handleLeverageChange = (e) => {
     const newLeverage = parseFloat(e.target.value);
     setLeverage(newLeverage);
-    
+
     // Only trigger compliance alert once per session for high leverage (16x and above)
     const shouldShowAlert = newLeverage >= 16 && !userRiskDecisions.hasSeenComplianceAlert;
-    
+
     if (shouldShowAlert) {
       // Mark that user has seen the compliance alert
       setUserRiskDecision({
-        hasSeenComplianceAlert: true
+        hasSeenComplianceAlert: true,
       });
-      
+
       setTimeout(() => {
         pushModal({
           type: 'compliance-alert',
-          leverage: newLeverage
+          leverage: newLeverage,
         });
       }, 500); // Small delay to ensure state update
     }
@@ -88,17 +96,22 @@ const OrderTicket = () => {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <button 
+            <button
               onClick={handleBackToAsset}
               className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             <Logo />
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="text-sm text-center">
               <div className="text-gray-600">Available Balance</div>
@@ -115,7 +128,11 @@ const OrderTicket = () => {
           <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
             <span>Trading Journey</span>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              <path
+                fillRule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
             <span className="text-accent-positive font-medium">Configure Trade</span>
           </div>
@@ -130,12 +147,10 @@ const OrderTicket = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-primary">Configure Your Trade</h1>
-                <div className="text-sm text-gray-600">
-                  Step 3 of 5
-                </div>
+                <div className="text-sm text-gray-600">Step 3 of 5</div>
               </div>
 
-              {/* Asset Summary */}
+              {/* Asset Summary + Chart with SL/TP drag */}
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
@@ -144,18 +159,37 @@ const OrderTicket = () => {
                       <h3 className="font-semibold text-primary">
                         {selectedAsset.symbol} - {selectedAsset.name}
                       </h3>
-                      <p className="text-sm text-gray-600">Current Price: ${selectedAsset.price.toFixed(2)}</p>
+                      <p className="text-sm text-gray-600">
+                        Current Price: ${selectedAsset.price.toFixed(2)}
+                      </p>
                     </div>
                   </div>
-                  <div className={`
+                  <div
+                    className={`
                     px-3 py-1 rounded-lg text-sm font-medium
-                    ${selectedAsset.change >= 0 
-                      ? 'text-green-700 bg-green-100' 
-                      : 'text-red-700 bg-red-100'
+                    ${
+                      selectedAsset.change >= 0
+                        ? 'text-green-700 bg-green-100'
+                        : 'text-red-700 bg-red-100'
                     }
-                  `}>
-                    {selectedAsset.change >= 0 ? '+' : ''}{selectedAsset.changePercent.toFixed(2)}%
+                  `}
+                  >
+                    {selectedAsset.change >= 0 ? '+' : ''}
+                    {selectedAsset.changePercent.toFixed(2)}%
                   </div>
+                </div>
+                <div className="mt-4">
+                  <TradeChart
+                    symbol={selectedAsset.symbol}
+                    interval="1m"
+                    entryPrice={selectedAsset.price}
+                    sl={stopLoss}
+                    tp={takeProfit}
+                    onChange={({ sl, tp }) => {
+                      if (sl !== undefined) setStopLoss(sl);
+                      if (tp !== undefined) setTakeProfit(tp);
+                    }}
+                  />
                 </div>
               </div>
 
@@ -169,9 +203,10 @@ const OrderTicket = () => {
                     onClick={() => setTradeDirection('buy')}
                     className={`
                       p-4 border-2 rounded-lg transition-all duration-200 text-center
-                      ${tradeDirection === 'buy' 
-                        ? 'border-green-500 bg-green-50 text-green-700' 
-                        : 'border-gray-200 hover:border-gray-300'
+                      ${
+                        tradeDirection === 'buy'
+                          ? 'border-green-500 bg-green-50 text-green-700'
+                          : 'border-gray-200 hover:border-gray-300'
                       }
                     `}
                   >
@@ -183,9 +218,10 @@ const OrderTicket = () => {
                     onClick={() => setTradeDirection('sell')}
                     className={`
                       p-4 border-2 rounded-lg transition-all duration-200 text-center
-                      ${tradeDirection === 'sell' 
-                        ? 'border-red-500 bg-red-50 text-red-700' 
-                        : 'border-gray-200 hover:border-gray-300'
+                      ${
+                        tradeDirection === 'sell'
+                          ? 'border-red-500 bg-red-50 text-red-700'
+                          : 'border-gray-200 hover:border-gray-300'
                       }
                     `}
                   >
@@ -198,12 +234,18 @@ const OrderTicket = () => {
 
               {/* Trade Amount */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-primary mb-2">
-                  Investment Amount
+                <label
+                  className="block text-sm font-semibold text-primary mb-2"
+                  htmlFor="investmentAmount"
+                >
+                  {t('common.amount')}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    $
+                  </span>
                   <input
+                    id="investmentAmount"
                     type="number"
                     min="100"
                     max="10000"
@@ -220,12 +262,13 @@ const OrderTicket = () => {
               {/* Leverage */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-semibold text-primary">
-                    <FinancialTerms.Leverage>Leverage</FinancialTerms.Leverage>
+                  <label className="text-sm font-semibold text-primary" htmlFor="leverageRange">
+                    <FinancialTerms.Leverage>{t('common.leverage')}</FinancialTerms.Leverage>
                   </label>
                   <span className="text-sm font-medium text-primary">{leverage}x</span>
                 </div>
                 <input
+                  id="leverageRange"
                   type="range"
                   min="1"
                   max="30"
@@ -239,21 +282,33 @@ const OrderTicket = () => {
                   <span>15x (Moderate)</span>
                   <span>30x (Aggressive)</span>
                 </div>
-                
+
                 {/* Risk Level Indicator */}
                 <div className="mt-3">
-                  <div className={`
+                  <div
+                    className={`
                     inline-flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium
-                    ${riskLevel === 'low' ? 'bg-green-100 text-green-700' : 
-                      riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-700' : 
-                      'bg-red-100 text-red-700'}
-                  `}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      riskLevel === 'low' ? 'bg-green-500' : 
-                      riskLevel === 'medium' ? 'bg-yellow-500' : 
-                      'bg-red-500'
-                    }`}></div>
-                    <span>Risk Level: {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}</span>
+                    ${
+                      riskLevel === 'low'
+                        ? 'bg-green-100 text-green-700'
+                        : riskLevel === 'medium'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-red-100 text-red-700'
+                    }
+                  `}
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        riskLevel === 'low'
+                          ? 'bg-green-500'
+                          : riskLevel === 'medium'
+                            ? 'bg-yellow-500'
+                            : 'bg-red-500'
+                      }`}
+                    ></div>
+                    <span>
+                      Risk Level: {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -272,23 +327,30 @@ const OrderTicket = () => {
                     </div>
                     <div className="text-left">
                       <div className="font-semibold text-blue-800">Risk/Reward Simulator</div>
-                      <div className="text-sm text-blue-600">See potential outcomes before you trade</div>
+                      <div className="text-sm text-blue-600">
+                        See potential outcomes before you trade
+                      </div>
                     </div>
                   </div>
-                  <svg 
-                    className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${showSimulator ? 'rotate-180' : ''}`} 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${showSimulator ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
 
                 {showSimulator && (
                   <div className="mt-4 p-4 bg-white border border-gray-200 rounded-lg animate-slide-up">
                     <h4 className="font-semibold text-primary mb-3">Scenario Analysis</h4>
-                    
+
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Price Movement Scenario
@@ -299,37 +361,51 @@ const OrderTicket = () => {
                         max="10"
                         step="0.5"
                         value={simulatorValues.priceChange}
-                        onChange={(e) => setSimulatorValues(prev => ({ 
-                          ...prev, 
-                          priceChange: parseFloat(e.target.value) 
-                        }))}
+                        onChange={(e) =>
+                          setSimulatorValues((prev) => ({
+                            ...prev,
+                            priceChange: parseFloat(e.target.value),
+                          }))
+                        }
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
                         <span>0.5%</span>
-                        <span className="font-medium text-primary">{simulatorValues.priceChange}%</span>
+                        <span className="font-medium text-primary">
+                          {simulatorValues.priceChange}%
+                        </span>
                         <span>10%</span>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="text-sm text-green-700 mb-1">If price rises {simulatorValues.priceChange}%</div>
+                        <div className="text-sm text-green-700 mb-1">
+                          If price rises {simulatorValues.priceChange}%
+                        </div>
                         <div className="font-bold text-green-800 text-lg">
                           +${Math.abs(potentialProfit).toFixed(2)}
                         </div>
                         <div className="text-xs text-green-600">
-                          New price: ${(selectedAsset.price * (1 + simulatorValues.priceChange / 100)).toFixed(2)}
+                          New price: $
+                          {(selectedAsset.price * (1 + simulatorValues.priceChange / 100)).toFixed(
+                            2
+                          )}
                         </div>
                       </div>
-                      
+
                       <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <div className="text-sm text-red-700 mb-1">If price falls {simulatorValues.priceChange}%</div>
+                        <div className="text-sm text-red-700 mb-1">
+                          If price falls {simulatorValues.priceChange}%
+                        </div>
                         <div className="font-bold text-red-800 text-lg">
                           -${Math.abs(potentialLoss).toFixed(2)}
                         </div>
                         <div className="text-xs text-red-600">
-                          New price: ${(selectedAsset.price * (1 - simulatorValues.priceChange / 100)).toFixed(2)}
+                          New price: $
+                          {(selectedAsset.price * (1 - simulatorValues.priceChange / 100)).toFixed(
+                            2
+                          )}
                         </div>
                       </div>
                     </div>
@@ -366,44 +442,48 @@ const OrderTicket = () => {
             {/* Trade Summary */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <h3 className="text-lg font-semibold text-primary mb-4">Trade Summary</h3>
-              
+
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Direction</span>
-                  <span className={`font-medium capitalize ${
-                    tradeDirection === 'buy' ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <span
+                    className={`font-medium capitalize ${
+                      tradeDirection === 'buy' ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
                     {tradeDirection} {tradeDirection === 'buy' ? '📈' : '📉'}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Investment</span>
                   <span className="font-medium">${tradeAmount.toLocaleString()}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Leverage</span>
                   <span className="font-medium">{leverage}x</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Position Size</span>
                   <span className="font-medium">${(tradeAmount * leverage).toLocaleString()}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Entry Price</span>
                   <span className="font-medium">${selectedAsset.price.toFixed(2)}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
-                  <span className="text-gray-600"><FinancialTerms.Spread>Spread</FinancialTerms.Spread></span>
+                  <span className="text-gray-600">
+                    <FinancialTerms.Spread>Spread</FinancialTerms.Spread>
+                  </span>
                   <span className="font-medium">{selectedAsset.spread} pts</span>
                 </div>
-                
+
                 <hr className="border-gray-200" />
-                
+
                 <div className="flex justify-between font-semibold">
                   <span className="text-gray-800">Margin Required</span>
                   <span className="text-primary">${marginRequired.toFixed(2)}</span>
@@ -411,25 +491,52 @@ const OrderTicket = () => {
               </div>
             </div>
 
+            {/* Risk Panel (real-time) */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+              <RiskPanel
+                input={{
+                  side: tradeDirection,
+                  entryPrice: selectedAsset.price,
+                  leverage: Math.max(1, Math.round(leverage)),
+                  amount: tradeAmount,
+                  sl: stopLoss,
+                  tp: takeProfit,
+                }}
+              />
+            </div>
+
             {/* Educational Tip */}
             <div className="bg-gradient-to-br from-accent-positive to-green-400 rounded-lg p-6 text-white">
               <h4 className="font-semibold mb-2">💡 Pro Tip</h4>
               <p className="text-sm text-green-100 leading-relaxed">
-                Use <FinancialTerms.StopLoss onGreen={true}>stop losses</FinancialTerms.StopLoss> and <FinancialTerms.TakeProfit onGreen={true}>take profits</FinancialTerms.TakeProfit> to manage your risk automatically. 
-                We'll show you how in the next step!
+                Use <FinancialTerms.StopLoss onGreen={true}>stop losses</FinancialTerms.StopLoss>{' '}
+                and{' '}
+                <FinancialTerms.TakeProfit onGreen={true}>take profits</FinancialTerms.TakeProfit>{' '}
+                to manage your risk automatically. We'll show you how in the next step!
               </p>
             </div>
 
             {/* Risk Warning */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
-                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <div>
-                  <h4 className="text-sm font-semibold text-amber-800 mb-1">Practice Mode Active</h4>
+                  <h4 className="text-sm font-semibold text-amber-800 mb-1">
+                    Practice Mode Active
+                  </h4>
                   <p className="text-xs text-amber-700">
-                    This is a risk-free environment. All trades use virtual money for learning purposes.
+                    This is a risk-free environment. All trades use virtual money for learning
+                    purposes.
                   </p>
                 </div>
               </div>
@@ -437,7 +544,7 @@ const OrderTicket = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Compliance Alert Modal */}
       <ComplianceAlert />
     </div>

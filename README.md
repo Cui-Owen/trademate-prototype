@@ -181,6 +181,8 @@ npm run build      # Production build with optimizations
 npm run test       # Run test suites
 npm run deploy     # Deploy to GitHub Pages
 npm run lint       # Code quality checks
+npm run storybook       # Storybook (UI docs/demos)
+npm run build-storybook # Build static Storybook
 ```
 
 ## Developer Journey
@@ -205,6 +207,18 @@ Golden path demo (2 minutes):
 - Providers: Market data provider interface and adapters `src/providers/` (polling, replay) chosen via `?provider=replay`
 - Compliance: Rule engine and rulesets under `src/compliance/`
 - Schemas: Zod runtime validation in `src/schema/`; inferred types exported for TypeScript
+
+## Phase 2 Additions
+
+- Design System: tokens in `src/design/tokens.ts`; base UI components in `src/components/ui/*`.
+- Storybook: configured in `.storybook/`; sample stories for Button/Card/ChartShell/RiskDistribution/DebugPanel/LanguageSwitcher.
+- Chart shell: `src/components/ChartShell.tsx` (dynamic import of `lightweight-charts`), now with MA/EMA and timeframe controls.
+- Risk model: `src/risk/model.ts` (margin/liquidation/expected P&L) + `src/risk/vis.tsx` (distribution visualization).
+- Observability: taxonomy `src/observability/taxonomy.ts`, gateway `src/observability/gateway.ts`, debug panel `src/observability/DebugPanel.tsx`.
+- Internationalization: `src/i18n/` (en/zh) + `LanguageSwitcher` component.
+- Chromatic: workflow `.github/workflows/chromatic.yml` (requires `CHROMATIC_PROJECT_TOKEN`).
+
+Tip: to enable chart rendering, install `lightweight-charts` locally, or rely on the dynamic import fallback.
 
 ### Deployment Pipeline
 

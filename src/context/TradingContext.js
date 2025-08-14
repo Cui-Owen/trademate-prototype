@@ -12,7 +12,7 @@ const initialState = {
     change: 2.34,
     changePercent: 1.35,
     spread: 0.02,
-    volume: '45.2M'
+    volume: '45.2M',
   },
   leverage: 1,
   tradeDirection: 'buy', // 'buy' or 'sell'
@@ -26,12 +26,12 @@ const initialState = {
     understandTerms: false,
     placeTrade: false,
     reviewTrade: false,
-    executeTrade: false
+    executeTrade: false,
   },
   riskTolerance: 'moderate', // 'conservative', 'moderate', 'aggressive'
   userRiskDecisions: {
-    hasSeenComplianceAlert: false // Simple flag - only warn once per session
-  }
+    hasSeenComplianceAlert: false, // Simple flag - only warn once per session
+  },
 };
 
 // Action types
@@ -47,7 +47,7 @@ export const TRADING_ACTIONS = {
   UPDATE_ONBOARDING_PROGRESS: 'UPDATE_ONBOARDING_PROGRESS',
   SET_USER_RISK_DECISION: 'SET_USER_RISK_DECISION',
   SET_RISK_TOLERANCE: 'SET_RISK_TOLERANCE',
-  RESET_TRADE_FORM: 'RESET_TRADE_FORM'
+  RESET_TRADE_FORM: 'RESET_TRADE_FORM',
 };
 
 // Reducer function
@@ -59,40 +59,40 @@ function tradingReducer(state, action) {
         selectedAsset: action.payload,
         onboardingProgress: {
           ...state.onboardingProgress,
-          exploreAsset: true
-        }
+          exploreAsset: true,
+        },
       };
-      
+
     case TRADING_ACTIONS.SET_LEVERAGE:
       return {
         ...state,
-        leverage: action.payload
+        leverage: action.payload,
       };
-      
+
     case TRADING_ACTIONS.SET_TRADE_DIRECTION:
       return {
         ...state,
-        tradeDirection: action.payload
+        tradeDirection: action.payload,
       };
-      
+
     case TRADING_ACTIONS.SET_TRADE_AMOUNT:
       return {
         ...state,
-        tradeAmount: action.payload
+        tradeAmount: action.payload,
       };
-      
+
     case TRADING_ACTIONS.SET_STOP_LOSS:
       return {
         ...state,
-        stopLoss: action.payload
+        stopLoss: action.payload,
       };
-      
+
     case TRADING_ACTIONS.SET_TAKE_PROFIT:
       return {
         ...state,
-        takeProfit: action.payload
+        takeProfit: action.payload,
       };
-      
+
     case TRADING_ACTIONS.EXECUTE_TRADE:
       const newTrade = {
         id: Date.now(),
@@ -104,60 +104,60 @@ function tradingReducer(state, action) {
         stopLoss: state.stopLoss,
         takeProfit: state.takeProfit,
         timestamp: new Date().toISOString(),
-        status: 'open'
+        status: 'open',
       };
-      
+
       return {
         ...state,
         currentTrade: newTrade,
         tradeHistory: [...state.tradeHistory, newTrade],
         onboardingProgress: {
           ...state.onboardingProgress,
-          executeTrade: true
-        }
+          executeTrade: true,
+        },
       };
-      
+
     case TRADING_ACTIONS.CLOSE_TRADE:
       const closedTrade = {
         ...state.currentTrade,
         exitPrice: action.payload.exitPrice,
         profit: action.payload.profit,
         status: 'closed',
-        closedAt: new Date().toISOString()
+        closedAt: new Date().toISOString(),
       };
-      
+
       return {
         ...state,
         currentTrade: null,
-        tradeHistory: state.tradeHistory.map(trade => 
+        tradeHistory: state.tradeHistory.map((trade) =>
           trade.id === closedTrade.id ? closedTrade : trade
-        )
+        ),
       };
-      
+
     case TRADING_ACTIONS.UPDATE_ONBOARDING_PROGRESS:
       return {
         ...state,
         onboardingProgress: {
           ...state.onboardingProgress,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
-      
+
     case TRADING_ACTIONS.SET_USER_RISK_DECISION:
       return {
         ...state,
         userRiskDecisions: {
           ...state.userRiskDecisions,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
-      
+
     case TRADING_ACTIONS.SET_RISK_TOLERANCE:
       return {
         ...state,
-        riskTolerance: action.payload
+        riskTolerance: action.payload,
       };
-      
+
     case TRADING_ACTIONS.RESET_TRADE_FORM:
       return {
         ...state,
@@ -165,9 +165,9 @@ function tradingReducer(state, action) {
         tradeDirection: 'buy',
         tradeAmount: 1000,
         stopLoss: null,
-        takeProfit: null
+        takeProfit: null,
       };
-      
+
     default:
       return state;
   }
@@ -194,28 +194,36 @@ export function TradingProvider({ children }) {
     dispatch({ type: TRADING_ACTIONS.SET_TRADE_AMOUNT, payload: amount });
   };
 
+  const setStopLoss = (price) => {
+    dispatch({ type: TRADING_ACTIONS.SET_STOP_LOSS, payload: price });
+  };
+
+  const setTakeProfit = (price) => {
+    dispatch({ type: TRADING_ACTIONS.SET_TAKE_PROFIT, payload: price });
+  };
+
   const executeTrade = () => {
     dispatch({ type: TRADING_ACTIONS.EXECUTE_TRADE });
   };
 
   const closeTrade = (exitPrice, profit) => {
-    dispatch({ 
-      type: TRADING_ACTIONS.CLOSE_TRADE, 
-      payload: { exitPrice, profit } 
+    dispatch({
+      type: TRADING_ACTIONS.CLOSE_TRADE,
+      payload: { exitPrice, profit },
     });
   };
 
   const updateOnboardingProgress = (progress) => {
-    dispatch({ 
-      type: TRADING_ACTIONS.UPDATE_ONBOARDING_PROGRESS, 
-      payload: progress 
+    dispatch({
+      type: TRADING_ACTIONS.UPDATE_ONBOARDING_PROGRESS,
+      payload: progress,
     });
   };
 
   const setUserRiskDecision = (decision) => {
-    dispatch({ 
-      type: TRADING_ACTIONS.SET_USER_RISK_DECISION, 
-      payload: decision 
+    dispatch({
+      type: TRADING_ACTIONS.SET_USER_RISK_DECISION,
+      payload: decision,
     });
   };
 
@@ -236,7 +244,7 @@ export function TradingProvider({ children }) {
   // Calculate risk level based on leverage and amount
   const calculateRiskLevel = () => {
     const { leverage, tradeAmount } = state;
-    
+
     // Risk calculation aligned with compliance alert thresholds
     if (leverage <= 5) return 'low';
     if (leverage <= 15) return 'medium';
@@ -253,17 +261,15 @@ export function TradingProvider({ children }) {
     closeTrade,
     updateOnboardingProgress,
     setUserRiskDecision,
+    setStopLoss,
+    setTakeProfit,
     calculatePotentialPnL,
     calculateMarginRequirement,
     calculateRiskLevel,
-    dispatch
+    dispatch,
   };
 
-  return (
-    <TradingContext.Provider value={value}>
-      {children}
-    </TradingContext.Provider>
-  );
+  return <TradingContext.Provider value={value}>{children}</TradingContext.Provider>;
 }
 
 // Custom hook to use trading context
